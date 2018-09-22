@@ -2,3 +2,4 @@ obj/
 bin/
 *.userprefs
 test-results/
+/src/.vs/threescale.NET/v15/Server/sqlite3

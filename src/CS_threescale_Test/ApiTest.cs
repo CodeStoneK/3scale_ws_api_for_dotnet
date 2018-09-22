@@ -18,6 +18,7 @@ namespace CS_threescale_Test
         private readonly string app_id = Environment.GetEnvironmentVariable ("DOTNET_PLUGIN_NUNIT_APP_ID");
         private readonly string service_id = Environment.GetEnvironmentVariable ("DOTNET_PLUGIN_NUNIT_SERVICE_ID");
         private readonly string service_token = Environment.GetEnvironmentVariable ("DOTNET_PLUGIN_NUNIT_SERVICE_TOKEN");
+        private readonly string user_key = "";
 
         private readonly string invalid_provider_key = "InvalidProviderKey";
         private readonly string invalid_app_id = "InvalidAppId";
@@ -294,7 +295,7 @@ namespace CS_threescale_Test
         #endregion
 
         #region Report Test
-
+        [Test]
         public void TestReportWithServiceToken ()
         {
             m_api = new Api ();
@@ -306,17 +307,22 @@ namespace CS_threescale_Test
 
             Hashtable transactions = new Hashtable ();
             Hashtable transaction = null;
+            Hashtable log = null;
             transaction = new Hashtable ();
-            transaction.Add ("app_id", app_id);
-            transaction.Add ("app_key", app_key);
-            transaction.Add ("service_id", service_id);
-            transaction.Add ("service_token", service_token);
+            log = new Hashtable();
 
+            transaction.Add("user_key", user_key);
             Hashtable usage = new Hashtable ();
+
             usage.Add ("hits", "1");
             transaction.Add ("usage", usage);
-            transactions.Add ("0", transaction);
 
+            log.Add("code", "200");
+            transaction.Add("log", log);
+
+            transactions.Add ("0", transaction);
+            transactions.Add("service_id", service_id);
+            transactions.Add("service_token", service_token);
 
             try {
                 m_api.report (transactions);

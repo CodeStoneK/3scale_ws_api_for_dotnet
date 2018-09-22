@@ -270,6 +270,12 @@ namespace CS_threescale
         {
             foreach (var entry in transactions.Keys)
             {
+                if (transactions[entry] is string)
+                {
+                    content += string.Format("&{0}={1}", entry, transactions[entry]);
+                    continue;
+                }
+
                 Hashtable transaction = (Hashtable)transactions[entry];
 
                 foreach (string parameter in transaction.Keys)
@@ -284,6 +290,18 @@ namespace CS_threescale
                         foreach (string metric in usage.Keys)
                         {
                             content += string.Format("&transactions[{0}][{1}][{2}]={3}", entry, parameter, metric, usage[metric]);
+                        }
+                    }
+                    else if (parameter.Equals("log"))
+                    {
+                        Hashtable log = (Hashtable)transaction[parameter];
+
+                        if ((log == null) || (log.Count <= 0))
+                            throw new ApiException("argument error: undefined transaction, log is missing in one record");
+
+                        foreach (string key in log.Keys)
+                        {
+                            content += string.Format("&transactions[{0}][{1}][{2}]={3}", entry, parameter, key, log[key]);
                         }
                     }
                     else
